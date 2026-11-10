@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Your Cart | NOVA{% endblock %}
+{% block content %}
+<div class="page-heading"><p class="eyebrow">YOUR SELECTION</p><h1>Shopping cart</h1></div>
+{% if items %}
+<div class="cart-layout"><div class="cart-items">
+{% for item in items %}<article class="cart-item">
+  {% if item.product.image_url %}<img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">{% else %}<div class="cart-placeholder">N</div>{% endif %}
+  <div class="cart-product"><a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a><span>₹{{ item.product.price }} each</span>
+  <div class="cart-actions"><form method="post" action="{% url 'update_cart' item.product.id %}">{% csrf_token %}<input aria-label="Quantity" type="number" name="quantity" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}"><button class="text-button">Update</button></form>
+  <form method="post" action="{% url 'remove_from_cart' item.product.id %}">{% csrf_token %}<button class="text-button remove">Remove</button></form></div></div>
+  <strong>₹{{ item.subtotal }}</strong>
+</article>{% endfor %}
+</div><aside class="summary"><h3>Order summary</h3><div class="summary-row"><span>Subtotal</span><strong>₹{{ total }}</strong></div><div class="summary-row"><span>Shipping</span><span>Free</span></div><hr><div class="summary-row total"><span>Total</span><strong>₹{{ total }}</strong></div><a class="button full" href="{% url 'checkout' %}">Proceed to checkout</a><p class="small-note">Payment is simulated for this internship demo.</p></aside></div>
+{% else %}<div class="empty-state"><h2>Your cart is empty</h2><p>Find something you love and add it here.</p><a class="button" href="{% url 'home' %}">Continue shopping</a></div>{% endif %}
+{% endblock %}

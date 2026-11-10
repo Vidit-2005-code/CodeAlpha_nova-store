@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}NOVA Store | Shop{% endblock %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">THE EVERYDAY EDIT</p><h1>Good finds.<br><span>Better days.</span></h1>
+  <p class="hero-copy">Discover useful essentials, thoughtful design and everyday favourites.</p>
+  <a class="button" href="#products">Explore products</a></div>
+  <div class="hero-art"><div class="hero-circle"></div><div class="hero-tag">CURATED<br>FOR YOU</div></div>
+</section>
+<section id="products" class="section-head"><div><p class="eyebrow">OUR COLLECTION</p><h2>Shop the latest</h2></div>
+<form class="search" method="get"><input name="q" value="{{ query }}" placeholder="Search products..."><button aria-label="Search">⌕</button></form></section>
+<div class="product-grid">
+{% for product in products %}
+  <article class="product-card">
+    <a class="product-image" href="{% url 'product_detail' product.slug %}">
+      {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<div class="image-placeholder">NOVA</div>{% endif %}
+      {% if product.stock == 0 %}<span class="stock-label">Sold out</span>{% endif %}
+    </a>
+    <div class="product-info"><p class="category">{{ product.category }}</p><a href="{% url 'product_detail' product.slug %}" class="product-name">{{ product.name }}</a>
+    <div class="product-bottom"><strong>₹{{ product.price }}</strong>
+      {% if product.stock > 0 %}<form method="post" action="{% url 'add_to_cart' product.id %}">{% csrf_token %}<input type="hidden" name="next" value="home"><button class="add-button">Add +</button></form>{% else %}<span class="muted">Unavailable</span>{% endif %}
+    </div></div>
+  </article>
+{% empty %}<div class="empty-state"><h3>No products found</h3><p>Try another search or add products from the admin panel.</p></div>{% endfor %}
+</div>
+{% endblock %}

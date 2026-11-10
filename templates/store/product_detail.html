@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} | NOVA{% endblock %}
+{% block content %}
+<div class="breadcrumbs"><a href="{% url 'home' %}">Shop</a> / {{ product.name }}</div>
+<section class="detail-layout">
+  <div class="detail-image">{% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<div class="image-placeholder">NOVA</div>{% endif %}</div>
+  <div class="detail-info"><p class="eyebrow">{{ product.category }}</p><h1>{{ product.name }}</h1><p class="detail-price">₹{{ product.price }}</p><p class="description">{{ product.description }}</p>
+  <p class="stock-note">{% if product.stock > 0 %}{{ product.stock }} in stock{% else %}Currently unavailable{% endif %}</p>
+  {% if product.stock > 0 %}<form method="post" action="{% url 'add_to_cart' product.id %}">{% csrf_token %}<button class="button">Add to cart</button></form>{% endif %}
+  <p class="small-note">Secure demo checkout · No real payment is collected</p></div>
+</section>
+{% endblock %}
